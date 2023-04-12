@@ -17,13 +17,12 @@ export const signinController = async (req:Request,res:Response)=>{
     if (!passwordsMatch) {
         return res.status(400).send({ message:"password does not match"})
     }
-    console.log(process.env.JWT_KEY);
     
     const userJwt = jwt.sign(
     {
         id: existingUser.id,
         email: existingUser.email,
-        role:existingUser.role
+        role:existingUser.role,
     },
         process.env.JWT_KEY!
     );
@@ -33,7 +32,17 @@ export const signinController = async (req:Request,res:Response)=>{
         jwt: userJwt
     };
 
-    res.status(201).send(existingUser);
+    const user = {
+        email:existingUser.email,
+        role:existingUser.role
+    }
+
+    // res.cookie("jwt",userJwt,{
+    //     expires:new Date(Date.now()+3652541254),
+    //     httpOnly:true
+    // })
+    
+    res.status(201).send({...user,token:userJwt});
 }
 
 export const changeRole = async (req:Request,res:Response) => {

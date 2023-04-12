@@ -17,17 +17,30 @@ declare global {
 }
 
 export const currentUser = ( req: Request, res: Response, next: NextFunction ) => {
-    if(!req.session?.jwt){
-        return res.json({message:"user not logged in"})
-    }
-
+  let bearer = new Array()
+  if(req.headers['authorization']){
+    let auth = req.headers['authorization']
+    bearer = auth.split(" ")
+  }
+  let token = bearer[1] ?? req.session?.jwt
+  
+  if(!token){
+    return res.status(401).json({"message":"user is not logged in"})
+  }
+  
+  console.log(token);
   try {
     const payload = jwt.verify(
-        req.session.jwt,
+        token,
         process.env.JWT_KEY!
       ) as UserPayload;
       req.currentUser = payload;
+      console.log(payload);
+      
   }
-  catch(err){ }
+  catch(err){ 
+    console.log(err);
+    
+  }
   next();
 }

@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema({
-    title:{
+    comment:{
         type:String,
         required:'Title is required',
         // minlength:4,
         // maxlength:15
     },
-    body:{
+    post_id:{
         type:String,
         required:'Body is required',
         // minlength:4,
@@ -18,3 +18,4 @@ const commentSchema = new mongoose.Schema({
 const Comment = mongoose.model("Comment",commentSchema)
 
 export { Comment }
+

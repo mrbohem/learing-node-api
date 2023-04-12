@@ -25,5 +25,10 @@ export const signupController = async (req:Request,res:Response)=>{
         jwt: userJwt
       };
 
+      // res.cookie("jwt",userJwt,{
+      //   expires:new Date(Date.now()+3652541254),
+      //   httpOnly:true
+      // })
+
     res.status(201).send(user);
 }

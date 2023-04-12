@@ -176,7 +176,6 @@ export const signinController = async (req:Request,res:Response)=&gt;{
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!passwordsMatch) {
 <span class="cstat-no" title="statement not covered" >        return res.status(400).send({ message:"password does not match"})</span>
     }
-    console.log(process.env.JWT_KEY);
     
     const userJwt = jwt.sign(
     {

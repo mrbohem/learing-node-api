@@ -9,13 +9,20 @@ interface UserPayload {
 }
 
 export const hasPermission = async (req: Request, res: Response,next: NextFunction) =>{
-    if(!req.session?.jwt){
-        return res.status(401).json({"message":"user is not logged in"})
-    }
+  let bearer = new Array()
+  if(req.headers['authorization']){
+    let auth = req.headers['authorization']
+    bearer = auth.split(" ")
+  }
+  let token = bearer[1] ?? req.session?.jwt
+  
+  if(!token){
+    return res.status(401).json({"message":"user is not logged i"})
+  }
 
   try {
     const user = jwt.verify(
-        req.session.jwt,
+        token,
         process.env.JWT_KEY!
       ) as UserPayload;
 
@@ -35,5 +42,11 @@ export const hasPermission = async (req: Request, res: Response,next: NextFuncti
       }
       next();
   }
-  catch(err){ }
+  catch(err){
+    if(err instanceof Error && err.message == "invalid token")
+    {
+      res.status(498).json({"message":err.message})
+    }
+    console.log(err);
+  }
 }
